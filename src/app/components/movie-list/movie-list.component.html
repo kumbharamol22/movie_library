@@ -1,0 +1,331 @@
+<div class="row">
+  <div class="col-md-6">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search by movie name"
+      #searchMovie
+    />
+  </div>
+  <div class="col-md-6 text-md-end">
+    <button class="btn btn-primary" (click)="addMovie()">Add</button>
+  </div>
+</div>
+<div class="mb-3"></div>
+<div class="row">
+  <div class="col-md-4" *ngFor="let movie of movies">
+    <app-block-card
+      [movie]="movie"
+      (movieAction)="onMovieAction($event)"
+    ></app-block-card>
+    <div class="mb-3"></div>
+  </div>
+  <div class="container heading" *ngIf="!movies?.length">
+    <h1>No Data Found</h1>
+  </div>
+</div>
+<ng-template #confirmationModal let-modal>
+  <app-confirmation-popup
+    [confirmationConfig]="confirmationConfigData"
+    (btnAction)="onBtnAction($event)"
+  ></app-confirmation-popup>
+</ng-template>
+
+<ng-template #addMovieModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add Movie</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form name="addMovieForm" [formGroup]="addMovieForm">
+      <div class="row p-2">
+        <div class="col-md-5">
+          <label class="form-check-label label required">Movie Name</label>
+        </div>
+        <div class="col-md-7">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Enter movie name here"
+            appTrimValue
+          />
+          <label
+            class="text-danger"
+            *ngIf="
+              addMovieForm.controls['name'].hasError('required') &&
+              addMovieForm.controls['name'].touched
+            "
+          >
+            Movie Name is Required!
+          </label>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <div class="col-md-5">
+          <label class="form-check-label label required">Details</label>
+        </div>
+        <div class="col-md-7">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="details"
+            placeholder="Enter movie details here"
+            appTrimValue
+          />
+          <label
+            class="text-danger"
+            *ngIf="
+              addMovieForm.controls['details'].hasError('required') &&
+              addMovieForm.controls['details'].touched
+            "
+          >
+            Movie Details is Required!
+          </label>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <div class="col-md-5">
+          <label class="form-check-label label required">Genre</label>
+        </div>
+        <div class="col-md-7">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="genre"
+            placeholder="Enter genre here"
+            appTrimValue
+          />
+          <label
+            class="text-danger"
+            *ngIf="
+              addMovieForm.controls['genre'].hasError('required') &&
+              addMovieForm.controls['genre'].touched
+            "
+          >
+            genre is Required!
+          </label>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <div class="col-md-5">
+          <label class="form-check-label label required">Actors</label>
+        </div>
+        <div class="col-md-7">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="actors"
+            placeholder="Enter actors here"
+            appTrimValue
+          />
+          <label
+            class="text-danger"
+            *ngIf="
+              addMovieForm.controls['actors'].hasError('required') &&
+              addMovieForm.controls['actors'].touched
+            "
+          >
+            Actors is Required!
+          </label>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <div class="col-md-5">
+          <label class="form-check-label label required">Release Date</label>
+        </div>
+        <div class="col-md-7">
+          <input
+            type="date"
+            class="form-control date-icon"
+            formControlName="releaseDate"
+          />
+          <label
+            class="text-danger"
+            *ngIf="
+              addMovieForm.controls['releaseDate'].hasError('required') &&
+              addMovieForm.controls['releaseDate'].touched
+            "
+          >
+            releaseDate is Required!
+          </label>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="col-md-2 text-md-end">
+      <button type="button" class="btn btn-secondary" (click)="onCancelMovie()">
+        Cancel
+      </button>
+    </div>
+    <div class="col-md-2 text-md-end">
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="addMovieForm.invalid"
+        (click)="onActionMovie('add')"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #editMovieModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Edit Movie</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form name="editMovieForm" [formGroup]="editMovieForm">
+      <div class="row p-2">
+        <div class="col-md-5">
+          <label class="form-check-label label required">Movie Name</label>
+        </div>
+        <div class="col-md-7">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Enter movie name here"
+            appTrimValue
+          />
+          <label
+            class="text-danger"
+            *ngIf="
+              editMovieForm.controls['name'].hasError('required') &&
+              editMovieForm.controls['name'].touched
+            "
+          >
+            Movie Name is Required!
+          </label>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <div class="col-md-5">
+          <label class="form-check-label label required">Details</label>
+        </div>
+        <div class="col-md-7">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="details"
+            placeholder="Enter movie details here"
+            appTrimValue
+          />
+          <label
+            class="text-danger"
+            *ngIf="
+              editMovieForm.controls['details'].hasError('required') &&
+              editMovieForm.controls['details'].touched
+            "
+          >
+            Movie Details is Required!
+          </label>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <div class="col-md-5">
+          <label class="form-check-label label required">Genre</label>
+        </div>
+        <div class="col-md-7">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="genre"
+            placeholder="Enter genre here"
+            appTrimValue
+          />
+          <label
+            class="text-danger"
+            *ngIf="
+              editMovieForm.controls['genre'].hasError('required') &&
+              editMovieForm.controls['genre'].touched
+            "
+          >
+            genre is Required!
+          </label>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <div class="col-md-5">
+          <label class="form-check-label label required">Actors</label>
+        </div>
+        <div class="col-md-7">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="actors"
+            placeholder="Enter actors here"
+            appTrimValue
+          />
+          <label
+            class="text-danger"
+            *ngIf="
+              editMovieForm.controls['actors'].hasError('required') &&
+              editMovieForm.controls['actors'].touched
+            "
+          >
+            Actors is Required!
+          </label>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <div class="col-md-5">
+          <label class="form-check-label label required">Release Date</label>
+        </div>
+        <div class="col-md-7">
+          <input
+            type="date"
+            class="form-control date-icon"
+            formControlName="releaseDate"
+          />
+          <label
+            class="text-danger"
+            *ngIf="
+              editMovieForm.controls['releaseDate'].hasError('required') &&
+              editMovieForm.controls['releaseDate'].touched
+            "
+          >
+            releaseDate is Required!
+          </label>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="col-md-2 text-md-end">
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">
+        Cancel
+      </button>
+    </div>
+    <div class="col-md-2 text-md-end">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="onActionMovie('edit')"
+      >
+        Update
+      </button>
+    </div>
+  </div>
+</ng-template>

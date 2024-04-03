@@ -1,0 +1,15 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title ellipsis-text" [title]="movie.name">{{ movie.name | titlecase }}</h5>
+  </div>
+  <div class="card-body">
+    <p class="card-text">Description: {{ movie.details }}</p>
+    <p class="card-text">Genre: {{ movie.genre }}</p>
+    <p class="card-text">Actors: {{ movie.actors.join(", ") }}</p>
+    <p class="card-text">Release Date: {{ movie.releaseDate | date }}</p>
+  </div>
+  <div class="card-footer text-body-secondary">
+    <a (click)="onMovieActionClick(movie,'edit')" class="card-link">Edit</a>
+    <a (click)="onMovieActionClick(movie, 'delete')" class="card-link">Delete</a>
+  </div>
+</div>
